@@ -26,9 +26,8 @@ func (tower *Tower) findAntinodes(towers []Tower, grid []string) {
 		// if they're the same frequency
 		if !tower.eq(towers[i]) && tower.frequency == towers[i].frequency {
 			vector := tower.location.subtract(towers[i].location)
-			antinode := tower.location.add(vector)
-			// check in bounds
-			if antinode.x >= 0 && antinode.x < len(grid[0]) && antinode.y >= 0 && antinode.y < len(grid) {
+			tower.antinodes = append(tower.antinodes, tower.location)
+			for antinode := tower.location.add(vector); antinode.inBounds(grid); antinode = antinode.add(vector) {
 				tower.antinodes = append(tower.antinodes, antinode)
 			}
 		}
@@ -37,6 +36,10 @@ func (tower *Tower) findAntinodes(towers []Tower, grid []string) {
 
 type Vector struct {
 	x, y int
+}
+
+func (vec *Vector) inBounds(grid []string) bool {
+	return vec.x >= 0 && vec.x < len(grid[0]) && vec.y >= 0 && vec.y < len(grid)
 }
 
 func (a *Vector) subtract(b Vector) Vector {
