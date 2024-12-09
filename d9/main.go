@@ -31,17 +31,43 @@ func printDisk(disk []int) string {
 }
 
 func defragDisk(disk []int) []int {
-	for i := slices.Index(disk, -1); i != -1; i = slices.Index(disk, -1) {
-		j := getLastNum(disk)
-		if i >= j {
-			break
+	for num := getLastNot(disk); num >= 0; num-- {
+		blockStart, blockEnd := getBlock(disk, num)
+		freeSpaceStart := getFreeSpaceOfLen(disk, blockEnd-blockStart)
+		if freeSpaceStart != -1 && freeSpaceStart < blockStart {
+			j := freeSpaceStart
+			for i := blockStart; i < blockEnd; i++ {
+				swapInt(disk, i, j)
+				j++
+			}
 		}
-		if j == -1 {
-			break
-		}
-		disk = swapInt(disk, i, j)
 	}
 	return disk
+}
+
+func getFreeSpaceOfLen(disk []int, length int) int {
+	for i, _ := range disk {
+		if disk[i] == -1 {
+			index := i
+			counter := 0
+			for i < len(disk) && disk[i] == -1 {
+				counter++
+				i++
+				if counter == length {
+					return index
+				}
+			}
+		}
+	}
+	return -1
+}
+
+func getBlock(disk []int, num int) (int, int) {
+	start := slices.Index(disk, num)
+	slices.Reverse(disk)
+	end := len(disk) - slices.Index(disk, num)
+	slices.Reverse(disk)
+	return start, end
 }
 
 func swapInt(disk []int, i1, i2 int) []int {
@@ -51,10 +77,10 @@ func swapInt(disk []int, i1, i2 int) []int {
 	return disk
 }
 
-func getLastNum(disk []int) int {
+func getLastNot(disk []int) int {
 	for i := len(disk) - 1; i >= 0; i-- {
 		if disk[i] != -1 {
-			return i
+			return disk[i]
 		}
 	}
 	return -1
