@@ -32,9 +32,9 @@ var directions []Vector = []Vector{
 	Vector{x: 0, y: -1},
 }
 
-func findTrail(grid [][]int, start, loc Vector, num int, dict map[Vector]bool) {
+func findTrail(grid [][]int, start, loc Vector, num int, dict map[Vector]int) {
 	if num == 9 {
-		dict[start] = true
+		dict[start] += 1
 		return
 	}
 	for _, dir := range directions {
@@ -64,9 +64,9 @@ func main() {
 
 	score := 0
 	for _, start := range trailHeads {
-		trailTails := make(map[Vector]bool)
+		trailTails := make(map[Vector]int)
 		findTrail(grid, start, start, 0, trailTails)
-		score += len(trailTails)
+		score += trailTails[start]
 	}
 
 	fmt.Println(score)
