@@ -1,4 +1,4 @@
-package main
+package puzzle
 
 type Vector struct {
 	x, y int
