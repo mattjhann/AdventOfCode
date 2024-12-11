@@ -1,4 +1,4 @@
-package puzzle
+package part1
 
 import (
 	"os"
@@ -83,7 +83,7 @@ func (ll *LinkedList) applyRules(n int) {
 	}
 }
 
-func DoPuzzle(file string) int {
+func DoPuzzle(file string, iterations int) int {
 	text, err := os.ReadFile(file)
 	if err != nil {
 		panic(err)
@@ -91,7 +91,7 @@ func DoPuzzle(file string) int {
 
 	linkedList := parseText(string(text))
 
-	linkedList.applyRules(25)
+	linkedList.applyRules(iterations)
 
 	return linkedList.length
 }

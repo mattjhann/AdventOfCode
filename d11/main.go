@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"main/puzzle"
+	"main/part2"
 )
 
 func main() {
-	fmt.Println(puzzle.DoPuzzle("puzzle/prod_input.txt"))
+	fmt.Println(part2.DoPuzzle("part2/test_input.txt", 75))
 }
