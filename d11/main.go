@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	fmt.Println(puzzle.DoPuzzle("puzzle/challenge_input.txt"))
+	fmt.Println(puzzle.DoPuzzle("puzzle/prod_input.txt"))
 }
