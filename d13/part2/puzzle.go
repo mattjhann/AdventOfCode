@@ -1,6 +1,7 @@
 package part2
 
 import (
+	"math"
 	"os"
 	"regexp"
 	"strconv"
@@ -51,24 +52,27 @@ func DoPuzzle(file string) int {
 
 	cost := 0
 	for _, target := range targets {
-		minimum := -1
-		// loop 1-100 times
-		for presses := 1; presses <= 200; presses++ {
-			// loop for each combination
-			for pressA := 0; pressA <= presses; pressA++ {
-				pressB := (presses - pressA)
-				finish := Vector{0, 0}
-				finish = finish.add(Vector{pressA * target.A.x, pressA * target.A.y})
-				finish = finish.add(Vector{pressB * target.B.x, pressB * target.B.y})
-				if target.Prize.eq(finish) {
-					if v := pressA*3 + pressB; v < minimum || minimum == -1 {
-						minimum = v
-					}
-				}
-			}
-		}
-		if minimum != -1 {
-			cost += minimum
+		target.Prize.x = target.Prize.x
+		target.Prize.y = target.Prize.y
+
+		a1 := target.A.x
+		b1 := -1 * target.A.y
+		c1 := 0
+		a2 := target.B.x
+		b2 := -1 * target.B.y
+		c2 := target.Prize.y / target.B.y
+
+		// calculate intersection of two lines
+		x := (b1*c2 - b2*c1) / (a1*b2 - a2*b1)
+
+		// calculate number of times A pressed to get to intersection
+		pressA := float64(x) / float64(target.A.x)
+
+		// calculate number of times B pressed to get from intersection to target
+		pressB := (float64(target.Prize.x) - float64(x)) / float64(target.B.x)
+
+		if pressA == math.Trunc(pressA) && pressB == math.Trunc(pressB) {
+			cost += 3*int(pressA) + int(pressB)
 		}
 	}
 

@@ -9,4 +9,5 @@ import (
 func main() {
 	fmt.Println(part1.DoPuzzle("part1/prod_input.txt"))
 	fmt.Println(part2.DoPuzzle("part2/test_input.txt"))
+	// TODO: ADD INTERSECTION OF LINES FORMULA AND USE THAT
 }
