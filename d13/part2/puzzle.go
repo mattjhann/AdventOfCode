@@ -52,15 +52,12 @@ func DoPuzzle(file string) int {
 
 	cost := 0
 	for _, target := range targets {
-		target.Prize.x = target.Prize.x
-		target.Prize.y = target.Prize.y
-
 		a1 := target.A.x
 		b1 := -1 * target.A.y
 		c1 := 0
 		a2 := target.B.x
 		b2 := -1 * target.B.y
-		c2 := target.Prize.y / target.B.y
+		c2 := target.B.x*target.Prize.x - target.B.y*target.Prize.y
 
 		// calculate intersection of two lines
 		x := (b1*c2 - b2*c1) / (a1*b2 - a2*b1)
