@@ -56,17 +56,70 @@ func DoPuzzle(file string) int {
 	}
 
 	robots := ParseText(string(text))
-	gridSize := Vector{11, 7}
+	gridSize := Vector{101, 103}
 	locations := make(map[string]int)
 
-	for i, _ := range robots {
-		for j := 0; j < 6; j++ {
+	for j := 0; j < 1000; j++ {
+		for i, _ := range robots {
 			robots[i].moveBySeconds(j, gridSize)
-			fmt.Println("Seconds: ", j, "\t Current pos: ", robots[i].currentPos)
+			locations[fmt.Sprint(robots[i].currentPos.x, robots[i].currentPos.y)] += 1
 		}
-		robots[i].moveBySeconds(5, gridSize)
-		locations[fmt.Sprint(robots[i].currentPos.x, robots[i].currentPos.y)] += 1
+		printRobots(locations, gridSize)
+		println("Seconds: ", j)
+		for k := range locations {
+			delete(locations, k)
+		}
 	}
 
-	return len(locations)
+	return getSafetyScore(locations, gridSize)
+}
+
+func getSafetyScore(locations map[string]int, gridSize Vector) int {
+	var quadrants []int = make([]int, 4)
+
+	for y := 0; y < gridSize.y; y++ {
+		for x := 0; x < gridSize.x; x++ {
+			if x < gridSize.x/2 {
+				if y < gridSize.y/2 {
+					quadrants[0] += locations[fmt.Sprint(x, y)]
+					fmt.Print(locations[fmt.Sprint(x, y)])
+				} else if y >= gridSize.y-gridSize.y/2 {
+					quadrants[2] += locations[fmt.Sprint(x, y)]
+					fmt.Print(locations[fmt.Sprint(x, y)])
+				} else {
+					fmt.Print(" ")
+				}
+			} else if x >= gridSize.x-gridSize.x/2 {
+				if y < gridSize.y/2 {
+					quadrants[1] += locations[fmt.Sprint(x, y)]
+					fmt.Print(locations[fmt.Sprint(x, y)])
+				} else if y >= gridSize.y-gridSize.y/2 {
+					quadrants[3] += locations[fmt.Sprint(x, y)]
+					fmt.Print(locations[fmt.Sprint(x, y)])
+				} else {
+					fmt.Print(" ")
+				}
+			} else {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Print("\n")
+	}
+	fmt.Println("--------------------")
+
+	return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3]
+}
+
+func printRobots(locations map[string]int, gridSize Vector) {
+	for y := 0; y < gridSize.y; y++ {
+		for x := 0; x < gridSize.x; x++ {
+			if v := locations[fmt.Sprint(x, y)]; v > 0 {
+				fmt.Print(v)
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Print("\n")
+	}
+	fmt.Println("--------------------")
 }
