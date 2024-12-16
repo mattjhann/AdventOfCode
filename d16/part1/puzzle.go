@@ -94,7 +94,7 @@ func (s Step) stepForward(grid map[Vector]rune) (Step, bool) {
 }
 
 func DoMaze(reindeer Reindeer, grid map[Vector]rune, finish Vector) int {
-	history := make(map[Vector]int)
+	history := make(map[string]int)
 	queue := []Step{}
 	initial := Step{location: reindeer.location, score: 0, direction: 0}
 	queue = append(queue, initial)
@@ -109,8 +109,8 @@ func DoMaze(reindeer Reindeer, grid map[Vector]rune, finish Vector) int {
 			return next.score
 		}
 
-		if v, _ := history[next.location]; v == 0 || v > next.score { // if not visited, or the new score is better
-			history[next.location] = next.score // add to history
+		if v, _ := history[fmt.Sprint(next.location, next.direction)]; v == 0 || v > next.score { // if not visited, or the new score is better
+			history[fmt.Sprint(next.location, next.direction)] = next.score // add to history
 
 			// check steps and add to queue
 			if v, ok := next.stepForward(grid); ok {
